@@ -1,8 +1,7 @@
 "use strict";
 
-/*   filtrer taches (toute, terminer, suppr)
-* sauvegarde locale storage
-*/
+//   filtrer taches (toute, terminer, suppr)
+
 
 const tabTasks = [...loadTask()];
 
@@ -14,23 +13,34 @@ function saveTask() {
 //charger les taches depuis le local storage 
 function loadTask() {
     const storageTask = localStorage.getItem("Tasks");
-   if (storageTask) {
+    if (storageTask) {
         return JSON.parse(storageTask)
-   } else {
+    } else {
         return [];
-   }
-};
-
-// afficher les taches chargé depuis le storage
-function displayTask() {
-    for (let i = 0; i < tabTasks.length; i++) {
-        tabTasks[i] = addTask();
     }
 };
 
-// recuperer nouvelles tache au click et ajouter tache
 const inputTask = document.getElementsByClassName("task")[0];
 const ulGroup = document.getElementsByClassName("list-group")[0];
+
+// afficher les taches chargé depuis le storage
+function displayTask() {
+    const tasksFromStorage = loadTask();
+    for (let i = 0; i < tasksFromStorage.length; i++) {
+        const newListItem = document.createElement("li");
+        newListItem.classList.add("list-group-item", "p-2", "d-flex", "justify-content-between");
+        newListItem.textContent = tasksFromStorage[i];
+        ulGroup.appendChild(newListItem);
+        const newButtonDel = document.createElement("button");
+        newButtonDel.innerHTML = `<i class="bi bi-trash3-fill"></i>`;
+        newButtonDel.classList.add("btn", "btn-outline-danger", "btn-sm", "btn-suppr");
+        newListItem.appendChild(newButtonDel);
+
+    }
+};
+displayTask();
+
+// recuperer nouvelles tache au click et ajouter tache
 
 const btnAdd = document.getElementById("button-addon2");
 btnAdd.addEventListener("click", addTask);
@@ -51,7 +61,6 @@ function addTask() {
     inputTask.value = "";
 }
 
-
 // definir tache terminer
 ulGroup.addEventListener("click", finishTask)
 ulGroup.addEventListener("click", deleteTask)
@@ -61,7 +70,7 @@ function finishTask(event) {
     for (let i = 0; i < listItem.length; i++) {
         if (event.target.tagName === "LI") {
             event.target.classList.toggle("text-success");
-            
+
             tabTasks.push()
             saveTask();
         }
@@ -73,9 +82,10 @@ console.log(localStorage.getItem("Tasks"))
 function deleteTask(event) {
     if (event.target.tagName === "BUTTON") {
         event.target.parentElement.remove();
-        console.log("ok");
-    } else if(event.target.tagName === "I"){
+        saveTask();
+    } else if (event.target.tagName === "I") {
         event.target.parentElement.parentElement.remove();
+        saveTask();
     }
 };
 
