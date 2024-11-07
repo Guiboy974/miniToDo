@@ -1,6 +1,9 @@
 "use strict";
 
-//   filtrer taches (toute, terminer, suppr)
+// identifier tache terminer dans tabTask
+// supprimer une tache du localStorage
+// filtrer taches (toute, terminer, suppr)
+// changer txtcontent des li par checkbox et label
 
 
 const tabTasks = [...loadTask()];
@@ -47,7 +50,7 @@ btnAdd.addEventListener("click", addTask);
 
 function addTask() {
     const newListItem = document.createElement("li");
-    newListItem.classList.add("list-group-item", "p-2", "d-flex", "justify-content-between");
+    newListItem.classList.add("list-group-item", "p-2", "d-flex");
     newListItem.textContent = inputTask.value;
     ulGroup.appendChild(newListItem);
 
@@ -67,6 +70,7 @@ ulGroup.addEventListener("click", deleteTask)
 
 function finishTask(event) {
     const listItem = document.querySelectorAll('li');
+    const btnDel = document.querySelectorAll('.btn-suppr')
     for (let i = 0; i < listItem.length; i++) {
         if (event.target.tagName === "LI") {
             event.target.classList.toggle("text-success");
@@ -82,6 +86,7 @@ console.log(localStorage.getItem("Tasks"))
 function deleteTask(event) {
     if (event.target.tagName === "BUTTON") {
         event.target.parentElement.remove();
+        tabTasks.splice()
         saveTask();
     } else if (event.target.tagName === "I") {
         event.target.parentElement.parentElement.remove();
