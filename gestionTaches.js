@@ -22,15 +22,28 @@ const tabTasks = loadTask();
 
 const inputTask = document.getElementsByClassName("task")[0];
 const ulGroup = document.getElementsByClassName("list-group")[0];
+const selectOption = document.getElementsByTagName("select")[0];
 
 // afficher toutes les taches chargé depuis le storage
 function displayTasks() {
-    const tasksFromStorage = tabTasks;
-    ulGroup.innerHTML = ""
-    for (let i = 0; i < tasksFromStorage.length; i++) {
+    ulGroup.innerHTML = "";
+    for (let i = 0; i < tabTasks.length; i++) {
+        // trier les taches en cours et terminer
+        selectOption.addEventListener("change", sortTasks)
+        function sortTasks(event) {
+            const optionSelect = event.target.selectedIndex;
+            console.log(event.target.selectedIndex);
+            
+            if (optionSelect === 1){
+                let tab1 = tabTasks.sort((a, b) => a.done - b.done);
+                console.log(tab1)
+            }
+        }
+
+        
         const newListItem = document.createElement("li");
         newListItem.classList.add("list-group-item", "p-2", "d-flex", "justify-content-between");
-        newListItem.textContent = tasksFromStorage[i].title;
+        newListItem.textContent = tabTasks[i].title;
         ulGroup.appendChild(newListItem);
         const newButtonDel = document.createElement("button");
         newButtonDel.innerHTML = `<i class="bi bi-trash3-fill"></i>`;
@@ -40,9 +53,6 @@ function displayTasks() {
     }
 };
 
-
-// affiche uniquement les taches en cour 
-function toDoTask() {}
 
 // recuperer nouvelles tache au click et ajouter tache
 
@@ -61,12 +71,11 @@ ulGroup.addEventListener("click", deleteTask);
 
 function finishTask(event) {
     const listItem = document.querySelectorAll('li');
-    const btnDel = document.querySelectorAll('.btn-suppr')
     for (let i = 0; i < listItem.length; i++) {
         if (event.target.tagName === "LI") {
-            event.target.classList.add("text-succes");
+            event.target.classList.add("text-danger");
 
-            tabTasks[i].done = true;
+            // tabTasks[i].done=true;
             saveTask();
         }
     }
@@ -89,17 +98,5 @@ function deleteTask(event) {
         saveTask();
     }
 };
-
-
-// trier les taches en cours et terminer
-const selectOption = document.getElementsByTagName("select")[0];
-selectOption.addEventListener("change", sortTasks)
-
-function sortTasks(event) {
-    const optionInSelect = document.getElementsByTagName("option");
-    const changeOption = event.target.value
-    console.log(event.target.value);
-    
-}
 
 displayTasks();
