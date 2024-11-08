@@ -1,10 +1,7 @@
 "use strict";
 
-// identifier tache terminer dans tabTask
-// supprimer une tache du localStorage
 // filtrer taches (toute, terminer, suppr)
-// changer txtcontent des li par checkbox et label
-
+// (changer txtcontent des li par checkbox et label)
 
 const tabTasks = [...loadTask()];
 
@@ -32,7 +29,7 @@ function displayTask() {
     for (let i = 0; i < tasksFromStorage.length; i++) {
         const newListItem = document.createElement("li");
         newListItem.classList.add("list-group-item", "p-2", "d-flex", "justify-content-between");
-        newListItem.textContent = tasksFromStorage[i];
+        newListItem.textContent = tasksFromStorage[i].title;
         ulGroup.appendChild(newListItem);
         const newButtonDel = document.createElement("button");
         newButtonDel.innerHTML = `<i class="bi bi-trash3-fill"></i>`;
@@ -50,7 +47,7 @@ btnAdd.addEventListener("click", addTask);
 
 function addTask() {
     const newListItem = document.createElement("li");
-    newListItem.classList.add("list-group-item", "p-2", "d-flex");
+    newListItem.classList.add("list-group-item", "p-2", "d-flex", "justify-content-between");
     newListItem.textContent = inputTask.value;
     ulGroup.appendChild(newListItem);
 
@@ -59,7 +56,7 @@ function addTask() {
     newButtonDel.classList.add("btn", "btn-outline-danger", "btn-sm", "btn-suppr");
     newListItem.appendChild(newButtonDel);
 
-    tabTasks.push(newListItem.textContent);
+    tabTasks.push({title:newListItem.textContent, done:false});
     saveTask();
     inputTask.value = "";
 }
@@ -75,7 +72,7 @@ function finishTask(event) {
         if (event.target.tagName === "LI") {
             event.target.classList.toggle("text-success");
 
-            tabTasks.push()
+            tabTasks[i].done = true
             saveTask();
         }
     }
@@ -85,13 +82,22 @@ console.log(localStorage.getItem("Tasks"))
 // supprimer tache
 function deleteTask(event) {
     if (event.target.tagName === "BUTTON") {
+        const index = tabTasks[event.target.parentElement]
         event.target.parentElement.remove();
-        tabTasks.splice()
+
+        tabTasks.splice(index, 1)
         saveTask();
     } else if (event.target.tagName === "I") {
+        const index2 = tabTasks[event.target.parentElement.parentElement]
         event.target.parentElement.parentElement.remove();
+
+        tabTasks.splice(index2, 1)
         saveTask();
     }
 };
 
 
+// filter les taches en cours et terminer
+function filterTasks() {
+    
+}
