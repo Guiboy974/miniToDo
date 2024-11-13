@@ -31,19 +31,19 @@ function displayTasks() {
     for (let i = 0; i < tabTasks.length; i++) {
         // trier les taches en cours et terminer
         const optionSelect = selectOption.selectedIndex;
-
+        
         // tache a faire
         if (optionSelect === 1) {
             if (tabTasks[i].done === false) {
                 displayTask(tabTasks[i]);
             }
-
+            
             // tache terminer  
         } else if (optionSelect === 2) {
             if (tabTasks[i].done === true) {
                 displayTask(tabTasks[i]);
             }
-
+            
             // toutes les taches    
         } else {
             displayTask(tabTasks[i]);
@@ -54,6 +54,8 @@ function displayTasks() {
 function displayTask(task) {
     const newListItem = document.createElement("li");
     newListItem.textContent = task.title;
+
+    newListItem.setAttribute("id", task.id)
     ulGroup.appendChild(newListItem);
     const newButtonDel = document.createElement("button");
     newButtonDel.innerHTML = `<i class="bi bi-trash3-fill"></i>`;
@@ -81,9 +83,18 @@ inputTask.addEventListener("keypress", keyPress)
 function addTask() {
     const modalBody = document.querySelector(".modal-body")
     modalBody.textContent = inputTask.value;
-    tabTasks.push({ title: inputTask.value, done: false });
+    tabTasks.push({ title: inputTask.value, done: false, id: newId(tabTasks) });
     saveTask();
     displayTasks();
+}
+
+const newId = function (task) {
+    if (task.length === 0) {
+        return 0;
+      }
+      const lastId = task[task.length - 1].id;
+      const newId = lastId + 1;
+      return newId;
 }
 
 function keyPress(event) {
@@ -96,21 +107,28 @@ function keyPress(event) {
     }
 }
 
-// definir tache terminer
+// definir tache terminer ou pas
 ulGroup.addEventListener("click", finishTask);
 ulGroup.addEventListener("click", deleteTask);
 
 function finishTask(event) {
     if (event.target.tagName === "LI") {
-        const targetTaskIndex = tabTasks.findIndex(function (task) {
-            return task.title === event.target.textContent;
-        });
-        if (tabTasks[targetTaskIndex].done === false) {
-            tabTasks[targetTaskIndex].done = true;
-        } else if (tabTasks[targetTaskIndex].done === true)
-            tabTasks[targetTaskIndex].done = false;
-        saveTask();
-        displayTasks();
+        console.log(event.target.id);
+        
+        const targetTaskIndex = tabTasks.findIndex((task) => task.id == event.target.id);
+
+        if (targetTaskIndex !== -1) {
+            const task = tabTasks[targetTaskIndex];
+            if (task.done === false) {
+                task.done = true;
+            } else if (task.done === true)
+                task.done = false;
+            saveTask();
+            displayTasks();
+        } else {
+            console.log("erreur");
+            
+        }
     }
 };
 
@@ -119,21 +137,19 @@ console.log(localStorage.getItem("Tasks"))
 // supprimer tache
 function deleteTask(event) {
     if (event.target.tagName === "BUTTON") {
-        const index = tabTasks[event.target.parentElement];
-        event.target.parentElement.remove();
-        tabTasks.splice(index, 1);
+        const targetTaskIndex = tabTasks.findIndex(function (task) {
+            return task.id == event.target.parentElement.id;
+        });
+        tabTasks.splice(targetTaskIndex, 1);
         saveTask();
-    } else if (event.target.tagName === "I") {
-        const index2 = tabTasks[event.target.parentElement.parentElement];
-        event.target.parentElement.parentElement.remove();
-        tabTasks.splice(index2, 1);
+    } else if (event.target.className === "bi bi-trash3-fill") {
+        const targetTaskIndex2 = tabTasks.findIndex(function (task) {
+            return task.id == event.target.parentElement.parentElement.id;
+        });
+        tabTasks.splice(targetTaskIndex2, 1);
         saveTask();
     }
+    displayTasks();
 };
-
-function openModal() {
-    const divModal = document.createElement("div");
-
-}
 
 displayTasks();
