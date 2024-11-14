@@ -1,8 +1,5 @@
 "use strict";
 
-// filtrer taches (toute, terminer, suppr)
-// (changer txtcontent des li par checkbox et label)
-
 //charger les taches depuis le local storage 
 function loadTask() {
     const storageTask = localStorage.getItem("Tasks");
