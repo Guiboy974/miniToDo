@@ -62,7 +62,7 @@ function displayTask(task) {
     if (task.done === false) {
         newListItem.classList.add("list-group-item", "p-2", "d-flex");
     } else {
-        newListItem.classList.add("list-group-item", "p-2", "d-flex", "fst-italic", "text-danger");
+        newListItem.classList.add("list-group-item", "p-2", "d-flex", "fst-italic", "text-success", "fw-medium");
         const newIcon = document.createElement("i");
         newIcon.innerHTML = '<i class="bi bi-check-all p-2"></i>';
         newListItem.insertBefore(newIcon, newButtonDel)
